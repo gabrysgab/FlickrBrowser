@@ -1,10 +1,14 @@
 package com.mateuszgabrynowicz.flickrbrowser;
 
+import java.io.Serializable;
+
 /**
  * Created by Mateusz on 2017-01-25.
  */
 
-class Photo {
+class Photo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private String title;
     private String author;
     private String authorId;
@@ -39,6 +43,10 @@ class Photo {
 
     String getImage() {
         return image;
+    }
+
+    public String getLink() {
+        return link;
     }
 
     @Override
