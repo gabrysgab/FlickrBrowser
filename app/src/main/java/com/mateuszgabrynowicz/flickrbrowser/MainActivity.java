@@ -1,7 +1,9 @@
 package com.mateuszgabrynowicz.flickrbrowser;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -39,9 +41,14 @@ public class MainActivity extends BaseActivity implements GetFlickrJsonData.OnDa
     protected void onResume() {
         Log.d(TAG, "onResume: starts");
         super.onResume();
-        GetFlickrJsonData getFlickrJsonData = new GetFlickrJsonData(this, "https://api.flickr.com/services/feeds/photos_public.gne","en-us", true);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String queryResult = sharedPreferences.getString(FLICKR_QUERY, "");
+        if(queryResult.length() > 0) {
+            GetFlickrJsonData getFlickrJsonData = new GetFlickrJsonData(this, "https://api.flickr.com/services/feeds/photos_public.gne", "en-us", true);
 //        getFlickrJsonData.executeOnSameThread("android, nougat");
-        getFlickrJsonData.execute("android, nougat");
+            getFlickrJsonData.execute(queryResult);
+        }
         Log.d(TAG, "onResume: ends");
 
     }
@@ -63,6 +70,12 @@ public class MainActivity extends BaseActivity implements GetFlickrJsonData.OnDa
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+
+        if(id == R.id.action_search) {
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
             return true;
         }
 
